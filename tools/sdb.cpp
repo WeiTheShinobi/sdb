@@ -1,8 +1,6 @@
 #include <iostream>
-#include <unistd.h>
+#include <memory>
 #include<string_view>
-#include <sys/ptrace.h>
-#include <sys/wait.h>
 #include <editline/readline.h>
 #include <string>
 #include <vector>
@@ -10,6 +8,10 @@
 
 #include "libsdb/error.hpp"
 #include "libsdb/process.hpp"
+
+namespace sdb {
+    class process;
+}
 
 namespace {
     std::vector<std::string> split(std::string_view str, char delimiter) {
