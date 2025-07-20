@@ -57,7 +57,6 @@ sdb::process::launch(std::filesystem::path path, bool debug) {
     return proc;
 }
 
-
 std::unique_ptr<sdb::process> sdb::process::attach(pid_t pid) {
     if (pid == 0) {
         error::send("Invalid pid");

@@ -1,9 +1,9 @@
 #include <unistd.h>
-#include <libsdb/pipe.hpp>
 #include <fcntl.h>
 #include <utility>
+#include <libsdb/pipe.hpp>
+#include <libsdb/error.hpp>
 
-#include "libsdb/error.hpp"
 
 sdb::pipe::pipe(bool close_on_exec) {
     if (pipe2(fds_, close_on_exec ? O_CLOEXEC : 0) < 0) {
@@ -27,14 +27,14 @@ int sdb::pipe::release_write() {
 void sdb::pipe::close_read() {
     if (fds_[read_fd] != -1) {
         close(fds_[read_fd]);
-        fds_[read_fd] = 1;
+        fds_[read_fd] = -1;
     }
 }
 
 void sdb::pipe::close_write() {
     if (fds_[write_fd] != -1) {
         close(fds_[write_fd]);
-        fds_[write_fd] = 1;
+        fds_[write_fd] = -1;
     }
 }
 
@@ -46,7 +46,7 @@ std::vector<std::byte> sdb::pipe::read() {
         error::send_errno("Pipe read failed");
     }
 
-    auto bytes = reinterpret_cast<std::byte*>(buf);
+    auto bytes = reinterpret_cast<std::byte *>(buf);
     return std::vector(bytes, bytes + chars_read);
 }
 
